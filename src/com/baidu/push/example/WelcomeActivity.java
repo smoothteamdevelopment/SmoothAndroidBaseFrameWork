@@ -1,34 +1,28 @@
 package com.baidu.push.example;
 
 
-import android.content.BroadcastReceiver;
+
 import android.content.Context;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
+
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
 import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
-import com.baidu.android.pushservice.PushConstants;
-import com.baidu.android.pushservice.PushManager;
-import com.baidu.push.example.event.BaiduPushBindEvent;
-import com.baidu.push.example.event.InitializeAppEndEvent;
-import com.baidu.push.example.event.NetworkStateEvent;
-import com.baidu.push.example.event.UserLoginEvent;
-import com.baidu.push.example.listener.UserLoginListener;
-import com.baidu.push.example.network.NetworkStateReceiver;
-import com.baidu.push.example.task.BaiduPushBindSucessTask;
-import com.baidu.push.example.task.DeviceInformationTask;
-import com.baidu.push.example.task.InitializeAppTask;
+import android.widget.*;
+
+import com.baidu.android.pushservice.*;
+import com.baidu.push.example.event.*;
+
+import com.baidu.push.example.listener.*;
+
+import com.baidu.push.example.task.*;
+
 import de.greenrobot.event.EventBus;
 import roboguice.activity.RoboActivity;
 import roboguice.event.EventManager;
 import roboguice.event.Observes;
-import roboguice.inject.ContentView;
-import roboguice.inject.InjectView;
+import roboguice.inject.*;
 import com.google.inject.Inject;
 
 
@@ -56,14 +50,17 @@ public class WelcomeActivity extends RoboActivity {
     @InjectView(R.id.userpasseditText)
     TextView loginPass = null;
     private static final String LOG_TAG = WelcomeActivity.class.getSimpleName();
-
+    @Inject InitializeAppTask initializeAppTask;
+    @Inject DeviceInformationTask deviceInformationTask;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        deviceInformationTask=  new DeviceInformationTask(this.getApplicationContext(), (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
         EventBus.getDefault().register(this);
         loginBtn.setEnabled(false);
         loginBtn.setOnClickListener(LoginViewListener);
     }
+
 
     private View.OnClickListener LoginViewListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -89,13 +86,6 @@ public class WelcomeActivity extends RoboActivity {
         loginBtn.setEnabled(true);
     }
 
-    public void onEventMainThread(NetworkStateEvent event) {
-        Log.i(LOG_TAG, "Network Type: " + event.getmTypeName()
-                + ", subtype: " + event.getmSubtypeName()
-                + ", available: " + event.ismAvailable());
-        Toast.makeText(this, "网络状态:" + event.ismAvailable() + "\t" + event.getmTypeName(),
-                Toast.LENGTH_LONG).show();
-    }
     public void onEventBackgroundThread(NetworkStateEvent event) {
         Log.i(LOG_TAG, "Network Type: " + event.getmTypeName()
                 + ", subtype: " + event.getmSubtypeName()
@@ -104,8 +94,10 @@ public class WelcomeActivity extends RoboActivity {
          * 判断当前设备是否有网络条件，在有网络条件的基础完成设备信息端注册
          */
         if (event.ismAvailable()) {
-            new DeviceInformationTask(this.getApplicationContext(), (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE)).execute();
-            new InitializeAppTask(this.getApplicationContext()).execute();
+//            new DeviceInformationTask(this.getApplicationContext(), (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE)).execute();
+//            new InitializeAppTask(this.getApplicationContext()).execute();
+            deviceInformationTask.execute();
+            initializeAppTask.execute();
         }
     }
 

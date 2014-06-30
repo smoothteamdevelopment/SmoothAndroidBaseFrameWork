@@ -6,6 +6,7 @@ import com.baidu.push.example.R;
 import com.baidu.push.example.bean.Appterminal;
 import com.baidu.push.example.bean.Jackson2HttpMessageConverterConfig;
 
+import com.google.inject.Inject;
 import org.springframework.web.client.RestTemplate;
 import roboguice.inject.InjectResource;
 import roboguice.util.RoboAsyncTask;
@@ -27,7 +28,7 @@ public class BaiduPushBindSucessTask extends RoboAsyncTask<Appterminal> {
     @InjectResource(R.string.systemBindUrl)
     private String systemBindUrl;
     private Jackson2HttpMessageConverterConfig converterConfig;
-
+    @Inject
     public BaiduPushBindSucessTask(Context context, Appterminal appterminal) {
         super(context);
         this.appterminal = appterminal;

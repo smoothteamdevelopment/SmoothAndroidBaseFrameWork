@@ -7,6 +7,7 @@ import com.baidu.push.example.R;
 import com.baidu.push.example.bean.App;
 import com.baidu.push.example.bean.Jackson2HttpMessageConverterConfig;
 import com.baidu.push.example.event.InitializeAppEndEvent;
+import com.google.inject.Inject;
 import de.greenrobot.event.EventBus;
 import org.springframework.web.client.RestTemplate;
 import roboguice.inject.InjectResource;
@@ -32,6 +33,7 @@ public class InitializeAppTask extends RoboAsyncTask<App> {
     @InjectResource(R.string.initializeAppUrl)
     protected String initializeAppUrl;
 
+    @Inject
     public InitializeAppTask(Context context) {
         super(context);
     }

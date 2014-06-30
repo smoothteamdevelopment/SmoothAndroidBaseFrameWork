@@ -8,6 +8,7 @@ import com.baidu.push.example.bean.Jackson2HttpMessageConverterConfig;
 import com.baidu.push.example.bean.Terminal;
 import com.baidu.push.example.utils.DeviceInformation;
 
+import com.google.inject.Inject;
 import org.springframework.web.client.RestTemplate;
 import roboguice.inject.InjectResource;
 import roboguice.util.RoboAsyncTask;
@@ -34,6 +35,7 @@ public class DeviceInformationTask extends RoboAsyncTask<Terminal> {
     public String initializeUrl;
     private SharedPreferences perferences;
 
+    @Inject
     public DeviceInformationTask(Context context, TelephonyManager telephonyManager) {
         super(context);
         this.telephonyManager = telephonyManager;

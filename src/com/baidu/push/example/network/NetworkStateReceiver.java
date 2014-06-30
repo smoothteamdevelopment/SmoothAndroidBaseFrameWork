@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 import com.baidu.push.example.event.NetworkStateEvent;
+import com.baidu.push.example.utils.NetworkUtil;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -29,6 +31,9 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             String typeName = info.getTypeName();
             String subtypeName = info.getSubtypeName();
             boolean available = info.isAvailable();
+            String status = NetworkUtil.getConnectivityStatusString(ctx);
+
+            Toast.makeText(ctx, status, Toast.LENGTH_LONG).show();
 //            Log.i(LOG_TAG, "Network Type: " + typeName
 //                    + ", subtype: " + subtypeName
 //                    + ", available: " + available);
