@@ -32,12 +32,9 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             String subtypeName = info.getSubtypeName();
             boolean available = info.isAvailable();
             String status = NetworkUtil.getConnectivityStatusString(ctx);
-
-            Toast.makeText(ctx, status, Toast.LENGTH_LONG).show();
-//            Log.i(LOG_TAG, "Network Type: " + typeName
-//                    + ", subtype: " + subtypeName
-//                    + ", available: " + available);
             EventBus.getDefault().post(new NetworkStateEvent(typeName, subtypeName, available));
+            Toast.makeText(ctx, status, Toast.LENGTH_LONG).show();
+
         }
     }
 
