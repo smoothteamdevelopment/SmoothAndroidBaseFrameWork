@@ -1,23 +1,9 @@
 package com.baidu.push.example;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Map;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 
 
 import com.baidu.frontia.FrontiaApplication;
-import com.baidu.push.example.network.NetWorkRoboBroadcastReceiver;
-import com.baidu.push.example.network.NetworkStateReceiver;
 import com.baidu.push.example.service.InitializeAppService;
 
 
