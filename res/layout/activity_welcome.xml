@@ -12,7 +12,7 @@
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_weight="0.21">
+                android:layout_height="wrap_content" android:layout_weight="0.54">
         </LinearLayout>
         <LinearLayout
                 android:orientation="vertical"
@@ -25,7 +25,7 @@
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="公路基础设施建设"
                     android:id="@+id/textView" android:singleLine="true" android:autoText="false"
-                    android:textSize="32dp" android:layout_weight="1" android:layout_gravity="center"/>
+                    android:textSize="25dp" android:layout_weight="1" android:layout_gravity="center"/>
         </LinearLayout>
         <LinearLayout
                 android:orientation="vertical"
@@ -37,7 +37,7 @@
                     android:layout_height="60dp"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="质量安全监测管理系统"
-                    android:id="@+id/textView2" android:textSize="30dp" android:layout_gravity="center"
+                    android:id="@+id/textView2" android:textSize="25dp" android:layout_gravity="center"
                     />
         </LinearLayout>
     </LinearLayout>
