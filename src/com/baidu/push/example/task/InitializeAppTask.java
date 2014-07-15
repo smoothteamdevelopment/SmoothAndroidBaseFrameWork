@@ -6,8 +6,9 @@ import android.util.Log;
 import com.baidu.push.example.R;
 import com.baidu.push.example.bean.App;
 import com.baidu.push.example.bean.Jackson2HttpMessageConverterConfig;
-import com.baidu.push.example.event.InitializeAppEndEvent;
+import com.baidu.push.example.event.InitializeAppEvent;
 import com.google.inject.Inject;
+//import de.greenrobot.event.EventBus;
 import de.greenrobot.event.EventBus;
 import org.springframework.web.client.RestTemplate;
 import roboguice.inject.InjectResource;
@@ -32,6 +33,8 @@ public class InitializeAppTask extends RoboAsyncTask<App> {
     private Jackson2HttpMessageConverterConfig converterConfig;
     @InjectResource(R.string.initializeAppUrl)
     protected String initializeAppUrl;
+    @InjectResource(R.string.baiduid)
+    protected String baiduid;
 
     @Inject
     public InitializeAppTask(Context context) {
@@ -43,7 +46,8 @@ public class InitializeAppTask extends RoboAsyncTask<App> {
         try {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(converterConfig.getConverter());
-            App app = restTemplate.getForObject(initializeAppUrl, App.class);
+            App app = restTemplate.getForObject(initializeAppUrl + baiduid, App.class);
+            app.setBaiduid(baiduid);
             return app;
         } catch (Exception e) {
             Log.e("MainActivity", e.getMessage(), e);
@@ -54,11 +58,8 @@ public class InitializeAppTask extends RoboAsyncTask<App> {
 
     @Override
     protected void onPreExecute() {
-        // do this in the UI thread before executing call()
         converterConfig = new Jackson2HttpMessageConverterConfig();
-        // 以下是您原先的代码实现，保持不变
         perferences = context.getSharedPreferences("com.baidu.push", context.MODE_PRIVATE);
-
     }
 
     @Override
@@ -70,18 +71,21 @@ public class InitializeAppTask extends RoboAsyncTask<App> {
             editor.putString(entry.getKey(), entry.getValue());
         }
         editor.commit();
-
-        EventBus.getDefault().post(new InitializeAppEndEvent(result.getSecretkey(), result.getApikey()));
+        EventBus.getDefault().post(new InitializeAppEvent(result.getSecretkey(),result.getApikey(),true));
     }
 
     @Override
     protected void onException(Exception e) {
         // do this in the UI thread if call() threw an exception
         Ln.d("Interrupting background task %s", this);
+        EventBus.getDefault().post(new InitializeAppEvent(null, null, false));
     }
 
     @Override
     protected void onFinally() {
         // always do this in the UI thread after calling call()
+        Ln.d("InitializeAppTask onFinally");
+
     }
+
 }

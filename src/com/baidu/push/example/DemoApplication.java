@@ -16,7 +16,9 @@ import android.util.Log;
 
 
 import com.baidu.frontia.FrontiaApplication;
+import com.baidu.push.example.network.NetWorkRoboBroadcastReceiver;
 import com.baidu.push.example.network.NetworkStateReceiver;
+import com.baidu.push.example.service.InitializeAppService;
 
 
 /*
@@ -27,15 +29,22 @@ import com.baidu.push.example.network.NetworkStateReceiver;
  */
 public class DemoApplication extends FrontiaApplication {
     private static final String LOG_TAG = DemoApplication.class.getSimpleName();
-    public BroadcastReceiver connectivityReceiver;
-    private IntentFilter mNetworkStateChangedFilter;
+    private   Intent intent;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-        connectivityReceiver = new NetworkStateReceiver();
-        mNetworkStateChangedFilter = new IntentFilter();
-        mNetworkStateChangedFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(connectivityReceiver, mNetworkStateChangedFilter);
+        // 创建Intent
+         intent = new Intent();
+        // 设置Class属性
+        intent.setClass(DemoApplication.this, InitializeAppService.class);
+        startService(intent);
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        stopService(intent);
     }
 }

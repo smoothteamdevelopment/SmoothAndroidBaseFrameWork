@@ -5,14 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.SharedPreferences;
-import com.baidu.push.example.event.BaiduPushBindEvent;
-import com.baidu.push.example.event.InitializeAppEndEvent;
-import de.greenrobot.event.EventBus;
+//import de.greenrobot.event.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -84,7 +81,7 @@ public class MyPushMessageReceiver extends FrontiaPushMessageReceiver {
         perferences = context.getSharedPreferences("com.baidu.push.mobileInfo", context.MODE_PRIVATE);
         String mobileId = perferences.getString("id", "");
         if(mobileId!=null&&mobileId.trim().length()>0){
-            EventBus.getDefault().post(new BaiduPushBindEvent(appid,channelId,mobileId));
+//            EventBus.getDefault().post(new BaiduPushBindEvent(appid,channelId,mobileId));
         }
 	}
 

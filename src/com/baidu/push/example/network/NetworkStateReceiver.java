@@ -9,7 +9,10 @@ import android.util.Log;
 import android.widget.Toast;
 import com.baidu.push.example.event.NetworkStateEvent;
 import com.baidu.push.example.utils.NetworkUtil;
-import de.greenrobot.event.EventBus;
+import com.google.inject.Inject;
+import roboguice.event.EventManager;
+import roboguice.util.Ln;
+//import de.greenrobot.event.EventBus;
 
 /**
  * 项目名称：
@@ -23,16 +26,19 @@ import de.greenrobot.event.EventBus;
  */
 
 public class NetworkStateReceiver extends BroadcastReceiver {
+    @Inject
+    protected EventManager eventManager;
     @Override
     public void onReceive(Context ctx, Intent intent) {
-        Log.i(LOG_TAG, "Action: " + intent.getAction());
+        Ln.i( "onReceive Action: " + intent.getAction());
         if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
             NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
             String typeName = info.getTypeName();
             String subtypeName = info.getSubtypeName();
             boolean available = info.isAvailable();
             String status = NetworkUtil.getConnectivityStatusString(ctx);
-            EventBus.getDefault().post(new NetworkStateEvent(typeName, subtypeName, available));
+//            EventBus.getDefault().post(new NetworkStateEvent(typeName, subtypeName, available));
+            eventManager.fire(new NetworkStateEvent(typeName, subtypeName, available));
             Toast.makeText(ctx, status, Toast.LENGTH_LONG).show();
 
         }

@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">公路基础设施建设质量安全监测管理系统</string>
-    <string name="api_key">uuKZlZVfaS2Ush5dwBK8SbZS</string>
+    <string name="baseAppUrl">http://192.168.10.123:8080/QASMSOH-1.0-SNAPSHOT</string>
+    <string name="baiduid">2106014</string>
     <string name="login">登录</string>
     <string name="text_btn_init">百度账号绑定</string>
     <string name="text_btn_init1">更换百度账号</string>
@@ -18,7 +19,7 @@
     <string name="media">Rich Media</string>
     <string name="custom_text_hint">用户自定义行为打开的Activity</string>
     <string name="tags_hint">请输入多个标签，以英文逗号隔开</string>
-    <string name="initializeAppUrl">http://192.168.10.123:8080/QASMSOH-1.0-SNAPSHOT/app/2106014</string>
+    <string name="initializeAppUrl">http://192.168.10.123:8080/QASMSOH-1.0-SNAPSHOT/app/</string>
     <string name="updateDeviceInformationTaskUrl">http://192.168.10.123:8080/QASMSOH-1.0-SNAPSHOT/terminal/</string>
     <string name="systemBindUrl">http://192.168.10.123:8080/QASMSOH-1.0-SNAPSHOT/terminal/bindAppTerminal</string>
 

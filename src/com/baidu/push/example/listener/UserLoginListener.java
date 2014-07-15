@@ -1,8 +1,6 @@
 package com.baidu.push.example.listener;
 
-import com.baidu.push.example.event.InitializeAppEndEvent;
 import com.baidu.push.example.event.UserLoginEvent;
-import com.google.common.eventbus.Subscribe;
 import roboguice.event.Observes;
 import roboguice.util.Ln;
 
@@ -21,9 +19,5 @@ public class UserLoginListener {
 
     public void doUserLoginEvent(@Observes UserLoginEvent loginEvent) {
         Ln.d("UserLoginEvent Hello, world!"+loginEvent.getLoginName()+loginEvent.getLoginPass());
-    }
-    @Subscribe
-    public void initializeAppEndEvent( InitializeAppEndEvent endEvent) {
-        Ln.d("UserLoginEvent Hello, world!"+endEvent.getApikey()+endEvent.getSecretkey());
     }
 }

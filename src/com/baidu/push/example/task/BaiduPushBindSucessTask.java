@@ -28,6 +28,7 @@ public class BaiduPushBindSucessTask extends RoboAsyncTask<Appterminal> {
     @InjectResource(R.string.systemBindUrl)
     private String systemBindUrl;
     private Jackson2HttpMessageConverterConfig converterConfig;
+
     @Inject
     public BaiduPushBindSucessTask(Context context, Appterminal appterminal) {
         super(context);
@@ -48,7 +49,7 @@ public class BaiduPushBindSucessTask extends RoboAsyncTask<Appterminal> {
             RestTemplate restTemplate = new RestTemplate();
             restTemplate.getMessageConverters().add(converterConfig.getConverter());
             restTemplate.getMessageConverters().add(converterConfig.getStringHttpMessageConverter());
-             appterminal = restTemplate.postForObject(systemBindUrl, appterminal, Appterminal.class);
+            appterminal = restTemplate.postForObject(systemBindUrl, appterminal, Appterminal.class);
             return appterminal;
         } catch (Exception e) {
             Log.e("MainActivity", e.getMessage(), e);
@@ -59,6 +60,5 @@ public class BaiduPushBindSucessTask extends RoboAsyncTask<Appterminal> {
     @Override
     protected void onSuccess(Appterminal appterminal) throws Exception {
         super.onSuccess(appterminal);
-
     }
 }

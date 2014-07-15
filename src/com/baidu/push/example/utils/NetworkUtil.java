@@ -3,6 +3,7 @@ package com.baidu.push.example.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 /**
  * 项目名称：
  * 功能描述：
@@ -19,17 +20,16 @@ public class NetworkUtil {
     public static int TYPE_MOBILE = 2;
     public static int TYPE_NOT_CONNECTED = 0;
 
-
     public static int getConnectivityStatus(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (null != activeNetwork) {
-            if(activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
                 return TYPE_WIFI;
 
-            if(activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
                 return TYPE_MOBILE;
         }
         return TYPE_NOT_CONNECTED;
@@ -39,12 +39,24 @@ public class NetworkUtil {
         int conn = NetworkUtil.getConnectivityStatus(context);
         String status = null;
         if (conn == NetworkUtil.TYPE_WIFI) {
-            status = "Wifi enabled";
+            status = "Wifi 已接入";
         } else if (conn == NetworkUtil.TYPE_MOBILE) {
-            status = "Mobile data enabled";
+            status = "数据连接 已接入";
         } else if (conn == NetworkUtil.TYPE_NOT_CONNECTED) {
-            status = "Not connected to Internet";
+            status = "当前手机无可用网络连接";
         }
         return status;
+    }
+
+    public static boolean checkInternetConnection(Context context) {
+        ConnectivityManager con_manager = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (con_manager.getActiveNetworkInfo() != null
+                && con_manager.getActiveNetworkInfo().isAvailable()
+                && con_manager.getActiveNetworkInfo().isConnected()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

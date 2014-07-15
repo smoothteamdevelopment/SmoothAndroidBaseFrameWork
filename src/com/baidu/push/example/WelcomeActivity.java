@@ -1,11 +1,9 @@
 package com.baidu.push.example;
 
 
-
 import android.content.Context;
-
+import android.content.Intent;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import android.view.View;
@@ -16,14 +14,17 @@ import com.baidu.push.example.event.*;
 
 import com.baidu.push.example.listener.*;
 
+import com.baidu.push.example.service.InitializeAppService;
 import com.baidu.push.example.task.*;
 
-import de.greenrobot.event.EventBus;
+import com.baidu.push.example.utils.NetworkUtil;
+//import de.greenrobot.event.EventBus;
 import roboguice.activity.RoboActivity;
 import roboguice.event.EventManager;
 import roboguice.event.Observes;
 import roboguice.inject.*;
 import com.google.inject.Inject;
+import roboguice.util.Ln;
 
 
 /**
@@ -41,7 +42,11 @@ public class WelcomeActivity extends RoboActivity {
     @Inject
     protected EventManager eventManager;
     @Inject
-    protected UserLoginListener userLoginListener;
+    protected InitializeAppService initializeAppService;
+//    @Inject
+//    protected UserLoginListener userLoginListener;
+//    @Inject
+//    protected InitializeAppListener initializeAppListener;
 
     @InjectView(R.id.image_btn_login_confirm)
     ImageButton loginBtn = null;
@@ -49,56 +54,38 @@ public class WelcomeActivity extends RoboActivity {
     TextView loginName = null;
     @InjectView(R.id.userpasseditText)
     TextView loginPass = null;
-    private static final String LOG_TAG = WelcomeActivity.class.getSimpleName();
-    @Inject InitializeAppTask initializeAppTask;
-    @Inject DeviceInformationTask deviceInformationTask;
+//    @Inject
+//    InitializeAppTask initializeAppTask;
+//    @Inject
+//    DeviceInformationTask deviceInformationTask;
+//    @Inject
+//    BaiduPushBindSucessTask baiduPushBindSucessTask;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        deviceInformationTask=  new DeviceInformationTask(this.getApplicationContext(), (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE));
-        EventBus.getDefault().register(this);
-        loginBtn.setEnabled(false);
         loginBtn.setOnClickListener(LoginViewListener);
+        /**
+         * 软件启动执行系统初始化操作
+         */
+        Intent serviceIntent = new Intent(this, InitializeAppService.class);
+        bindService(serviceIntent, initializeAppService, Context.BIND_AUTO_CREATE);
+
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(initializeAppService);
+    }
 
     private View.OnClickListener LoginViewListener = new View.OnClickListener() {
         public void onClick(View v) {
             eventManager.fire(new UserLoginEvent(loginName.getText().toString(), loginPass.getText().toString()));
         }
     };
-
     protected void handleEvent(@Observes UserLoginEvent event) {
-        Toast.makeText(this, "Custom event",
+        Toast.makeText(this, "UserLogin Event",
                 Toast.LENGTH_LONG).show();
     }
-
-    public void onEventBackgroundThread(InitializeAppEndEvent event) {
-        PushManager.startWork(getApplicationContext(),
-                PushConstants.LOGIN_TYPE_API_KEY, event.getApikey());
-    }
-
-    public void onEventBackgroundThread(BaiduPushBindEvent event) {
-        new BaiduPushBindSucessTask(this.getApplicationContext(), event).execute();
-    }
-
-    public void onEventMainThread(InitializeAppEndEvent event) {
-        loginBtn.setEnabled(true);
-    }
-
-    public void onEventBackgroundThread(NetworkStateEvent event) {
-        Log.i(LOG_TAG, "Network Type: " + event.getmTypeName()
-                + ", subtype: " + event.getmSubtypeName()
-                + ", available: " + event.ismAvailable());
-        /**
-         * 判断当前设备是否有网络条件，在有网络条件的基础完成设备信息端注册
-         */
-        if (event.ismAvailable()) {
-//            new DeviceInformationTask(this.getApplicationContext(), (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE)).execute();
-//            new InitializeAppTask(this.getApplicationContext()).execute();
-            deviceInformationTask.execute();
-            initializeAppTask.execute();
-        }
-    }
-
 }
