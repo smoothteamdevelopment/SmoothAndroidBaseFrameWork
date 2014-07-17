@@ -4,27 +4,22 @@ package com.baidu.push.example;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import android.view.View;
 import android.widget.*;
 
-import com.baidu.android.pushservice.*;
+import com.baidu.push.example.bean.module.TerminalModel;
 import com.baidu.push.example.event.*;
 
-import com.baidu.push.example.listener.*;
-
+import com.baidu.push.example.service.ITerminalService;
 import com.baidu.push.example.service.InitializeAppService;
-import com.baidu.push.example.task.*;
 
-import com.baidu.push.example.utils.NetworkUtil;
 //import de.greenrobot.event.EventBus;
 import roboguice.activity.RoboActivity;
 import roboguice.event.EventManager;
 import roboguice.event.Observes;
 import roboguice.inject.*;
 import com.google.inject.Inject;
-import roboguice.util.Ln;
 
 
 /**
@@ -43,10 +38,8 @@ public class WelcomeActivity extends RoboActivity {
     protected EventManager eventManager;
     @Inject
     protected InitializeAppService initializeAppService;
-//    @Inject
-//    protected UserLoginListener userLoginListener;
-//    @Inject
-//    protected InitializeAppListener initializeAppListener;
+    @Inject
+    protected ITerminalService terminalService;
 
     @InjectView(R.id.image_btn_login_confirm)
     ImageButton loginBtn = null;
@@ -54,12 +47,6 @@ public class WelcomeActivity extends RoboActivity {
     TextView loginName = null;
     @InjectView(R.id.userpasseditText)
     TextView loginPass = null;
-//    @Inject
-//    InitializeAppTask initializeAppTask;
-//    @Inject
-//    DeviceInformationTask deviceInformationTask;
-//    @Inject
-//    BaiduPushBindSucessTask baiduPushBindSucessTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +71,15 @@ public class WelcomeActivity extends RoboActivity {
             eventManager.fire(new UserLoginEvent(loginName.getText().toString(), loginPass.getText().toString()));
         }
     };
+
     protected void handleEvent(@Observes UserLoginEvent event) {
-        Toast.makeText(this, "UserLogin Event",
+        TerminalModel terminalModel = terminalService.QueryTerminalModel();
+        Toast.makeText(this, "UserLogin Event" + terminalModel.getImei()+"\t"+terminalModel.getModel(),
                 Toast.LENGTH_LONG).show();
     }
+
+    //提供注入点
+//    public void setiTimeService(ITimeService iTimeService) {
+//        this.iTimeService = iTimeService;
+//    }
 }

@@ -1,25 +1,27 @@
-package com.baidu.push.example.bean;
+package com.baidu.push.example.repository.impl;
 
+import com.baidu.push.example.repository.HttpMessageConverterConfig;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
 /**
  * 项目名称：
  * 功能描述：
  * 创建人:ahtt_nsj
- * 创建时间:2014/6/17 0017 14:56
+ * 创建时间:2014/7/17 0017 16:09
  * 修改人：
  * 修改时间:
  *
  * @版本：V
  */
 
-public class Jackson2HttpMessageConverterConfig {
+public class Jackson2HttpMessageConverterConfig implements HttpMessageConverterConfig {
     private ObjectMapper mapper;
+
     private MappingJackson2HttpMessageConverter converter;
 
     public Jackson2HttpMessageConverterConfig() {
@@ -32,15 +34,13 @@ public class Jackson2HttpMessageConverterConfig {
         converter.setObjectMapper(mapper);
     }
 
+    @Override
     public ObjectMapper getMapper() {
         return mapper;
     }
 
-    public MappingJackson2HttpMessageConverter getConverter() {
+    @Override
+    public HttpMessageConverter getConverter() {
         return converter;
-    }
-
-    public StringHttpMessageConverter getStringHttpMessageConverter() {
-        return new StringHttpMessageConverter();
     }
 }

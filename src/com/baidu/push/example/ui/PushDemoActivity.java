@@ -1,4 +1,4 @@
-package com.baidu.push.example;
+package com.baidu.push.example.ui;
 
 import java.util.Calendar;
 import java.util.List;
@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.baidu.android.pushservice.CustomPushNotificationBuilder;
 import com.baidu.android.pushservice.PushConstants;
 import com.baidu.android.pushservice.PushManager;
+import com.baidu.push.example.utils.Utils;
 
 /*
  * 云推送Demo主Activity。

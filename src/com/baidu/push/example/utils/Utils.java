@@ -1,4 +1,4 @@
-package com.baidu.push.example;
+package com.baidu.push.example.utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +19,11 @@ public class Utils {
 	public static final String RESPONSE_METHOD = "method";
 	public static final String RESPONSE_CONTENT = "content";
 	public static final String RESPONSE_ERRCODE = "errcode";
-	protected static final String ACTION_LOGIN = "com.baidu.pushdemo.action.LOGIN";
+    public static final String ACTION_LOGIN = "com.baidu.pushdemo.action.LOGIN";
 	public static final String ACTION_MESSAGE = "com.baiud.pushdemo.action.MESSAGE";
 	public static final String ACTION_RESPONSE = "bccsclient.action.RESPONSE";
 	public static final String ACTION_SHOW_MESSAGE = "bccsclient.action.SHOW_MESSAGE";
-	protected static final String EXTRA_ACCESS_TOKEN = "access_token";
+    public static final String EXTRA_ACCESS_TOKEN = "access_token";
 	public static final String EXTRA_MESSAGE = "message";
 	
 	public static String logStringCache = "";

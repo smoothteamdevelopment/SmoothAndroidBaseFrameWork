@@ -5,10 +5,12 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import com.baidu.push.example.R;
 import com.baidu.push.example.bean.App;
-import com.baidu.push.example.bean.Jackson2HttpMessageConverterConfig;
 import com.baidu.push.example.event.InitializeAppEvent;
+import com.baidu.push.example.repository.HttpMessageConverterConfig;
+import com.baidu.push.example.repository.impl.Jackson2HttpMessageConverterConfig;
 import com.google.inject.Inject;
 //import de.greenrobot.event.EventBus;
+import com.google.inject.name.Named;
 import de.greenrobot.event.EventBus;
 import org.springframework.web.client.RestTemplate;
 import roboguice.inject.InjectResource;
@@ -29,12 +31,17 @@ import java.util.Map;
  */
 
 public class InitializeAppTask extends RoboAsyncTask<App> {
-    private SharedPreferences perferences;
-    private Jackson2HttpMessageConverterConfig converterConfig;
+    @Inject
+    @Named("mobileInfoSharedPreferencesProvider")
+    private SharedPreferences sharedPreferences;
     @InjectResource(R.string.initializeAppUrl)
     protected String initializeAppUrl;
     @InjectResource(R.string.baiduid)
     protected String baiduid;
+    @Inject
+    private RestTemplate restTemplate;
+    @Inject
+    private HttpMessageConverterConfig httpMessageConverterConfig;
 
     @Inject
     public InitializeAppTask(Context context) {
@@ -43,35 +50,26 @@ public class InitializeAppTask extends RoboAsyncTask<App> {
 
     @Override
     public App call() throws Exception {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(converterConfig.getConverter());
-            App app = restTemplate.getForObject(initializeAppUrl + baiduid, App.class);
-            app.setBaiduid(baiduid);
-            return app;
-        } catch (Exception e) {
-            Log.e("MainActivity", e.getMessage(), e);
-        }
-
-        return null;
+        App app = restTemplate.getForObject(initializeAppUrl + baiduid, App.class);
+        app.setBaiduid(baiduid);
+        return app;
     }
 
     @Override
     protected void onPreExecute() {
-        converterConfig = new Jackson2HttpMessageConverterConfig();
-        perferences = context.getSharedPreferences("com.baidu.push", context.MODE_PRIVATE);
+
     }
 
     @Override
     protected void onSuccess(App result) {
         // do this in the UI thread if call() succeeds
-        SharedPreferences.Editor editor = perferences.edit();
-        Map<String, String> objectAsMap = converterConfig.getMapper().convertValue(result, Map.class);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Map<String, String> objectAsMap = httpMessageConverterConfig.getMapper().convertValue(result, Map.class);
         for (Map.Entry<String, String> entry : objectAsMap.entrySet()) {
             editor.putString(entry.getKey(), entry.getValue());
         }
         editor.commit();
-        EventBus.getDefault().post(new InitializeAppEvent(result.getSecretkey(),result.getApikey(),true));
+        EventBus.getDefault().post(new InitializeAppEvent(result.getSecretkey(), result.getApikey(), true));
     }
 
     @Override
@@ -88,4 +86,15 @@ public class InitializeAppTask extends RoboAsyncTask<App> {
 
     }
 
+    @Override
+    protected void onThrowable(Throwable t) throws RuntimeException {
+        Ln.d("InitializeAppTask onThrowable");
+        super.onThrowable(t);
+    }
+
+    @Override
+    protected void onInterrupted(Exception e) {
+        Ln.d("InitializeAppTask onInterrupted");
+        super.onInterrupted(e);
+    }
 }

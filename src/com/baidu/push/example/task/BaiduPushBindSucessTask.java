@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.Log;
 import com.baidu.push.example.R;
 import com.baidu.push.example.bean.Appterminal;
-import com.baidu.push.example.bean.Jackson2HttpMessageConverterConfig;
 
+import com.baidu.push.example.repository.impl.Jackson2HttpMessageConverterConfig;
 import com.google.inject.Inject;
 import org.springframework.web.client.RestTemplate;
 import roboguice.inject.InjectResource;
@@ -27,8 +27,8 @@ public class BaiduPushBindSucessTask extends RoboAsyncTask<Appterminal> {
     private Appterminal appterminal;
     @InjectResource(R.string.systemBindUrl)
     private String systemBindUrl;
-    private Jackson2HttpMessageConverterConfig converterConfig;
-
+    @Inject
+    private RestTemplate restTemplate;
     @Inject
     public BaiduPushBindSucessTask(Context context, Appterminal appterminal) {
         super(context);
@@ -38,17 +38,11 @@ public class BaiduPushBindSucessTask extends RoboAsyncTask<Appterminal> {
     @Override
     protected void onPreExecute() throws Exception {
         super.onPreExecute();
-        converterConfig = new Jackson2HttpMessageConverterConfig();
-
-
     }
 
     @Override
     public Appterminal call() throws Exception {
         try {
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(converterConfig.getConverter());
-            restTemplate.getMessageConverters().add(converterConfig.getStringHttpMessageConverter());
             appterminal = restTemplate.postForObject(systemBindUrl, appterminal, Appterminal.class);
             return appterminal;
         } catch (Exception e) {

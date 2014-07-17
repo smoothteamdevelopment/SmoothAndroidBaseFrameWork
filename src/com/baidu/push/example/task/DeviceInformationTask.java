@@ -1,19 +1,16 @@
 package com.baidu.push.example.task;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.telephony.TelephonyManager;
 import com.baidu.push.example.R;
-import com.baidu.push.example.bean.Jackson2HttpMessageConverterConfig;
 import com.baidu.push.example.bean.Terminal;
-import com.baidu.push.example.utils.DeviceInformation;
+import com.baidu.push.example.event.RegisterDeviceEvent;
+import com.baidu.push.example.repository.ITerminalRepository;
 
 import com.google.inject.Inject;
+import de.greenrobot.event.EventBus;
 import org.springframework.web.client.RestTemplate;
 import roboguice.inject.InjectResource;
 import roboguice.util.RoboAsyncTask;
-
-import java.util.Map;
 
 
 /**
@@ -28,35 +25,27 @@ import java.util.Map;
  */
 
 public class DeviceInformationTask extends RoboAsyncTask<Terminal> {
-    private TelephonyManager telephonyManager;
-    private Terminal terminal;
-    private Jackson2HttpMessageConverterConfig converterConfig;
+
     @InjectResource(R.string.updateDeviceInformationTaskUrl)
     public String initializeUrl;
-    private SharedPreferences perferences;
-
     @Inject
-    public DeviceInformationTask(Context context, TelephonyManager telephonyManager) {
+    private ITerminalRepository terminalRepository;
+    @Inject
+    private RestTemplate restTemplate;
+    @Inject
+    public DeviceInformationTask(Context context) {
         super(context);
-        this.telephonyManager = telephonyManager;
     }
 
     @Override
     protected void onPreExecute() {
-        converterConfig = new Jackson2HttpMessageConverterConfig();
-        terminal = DeviceInformation.getTerminalInformation(telephonyManager);
-        perferences = context.getSharedPreferences("com.baidu.push.mobileInfo", context.MODE_PRIVATE);
+
     }
 
     @Override
     public Terminal call() throws Exception {
-        String id = perferences.getString("id", "");
-        if (id == null || id.trim().length() == 0) {
-            RestTemplate restTemplate = new RestTemplate();
-            restTemplate.getMessageConverters().add(converterConfig.getConverter());
-            restTemplate.getMessageConverters().add(converterConfig.getStringHttpMessageConverter());
-            terminal = restTemplate.postForObject(initializeUrl + terminal.getImei(), terminal, Terminal.class);
-        }
+        Terminal terminalRead = terminalRepository.QueryTerminalModel();
+        Terminal terminal = restTemplate.postForObject(initializeUrl + terminalRead.getImei(), terminalRead, Terminal.class);
         return terminal;
     }
 
@@ -64,15 +53,15 @@ public class DeviceInformationTask extends RoboAsyncTask<Terminal> {
     protected void onSuccess(Terminal result) {
         // do this in the UI thread if call() succeeds
         if (result != null && result.getId() != null) {
-            SharedPreferences.Editor editor = perferences.edit();
-            Map<String, String> objectAsMap = converterConfig.getMapper().convertValue(result, Map.class);
-            for (Map.Entry<String, String> entry : objectAsMap.entrySet()) {
-                editor.putString(entry.getKey(), entry.getValue());
-            }
-            editor.commit();
+            EventBus.getDefault().post(new RegisterDeviceEvent(true));
+            terminalRepository.updateTerminalSharedPreferences(result);
         }
-//        EventBus.getDefault().post(new InitializeAppEndEvent(result.getSecretkey(), result.getApikey()));
+
     }
 
-
+    @Override
+    protected void onException(Exception e) throws RuntimeException {
+        EventBus.getDefault().post(new RegisterDeviceEvent(false));
+        super.onException(e);
+    }
 }

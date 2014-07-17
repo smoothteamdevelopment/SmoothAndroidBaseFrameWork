@@ -1,4 +1,4 @@
-package com.baidu.push.example;
+package com.baidu.push.example.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.SharedPreferences;
 //import de.greenrobot.event.EventBus;
+import com.baidu.push.example.utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 

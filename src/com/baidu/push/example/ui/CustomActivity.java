@@ -1,4 +1,4 @@
-package com.baidu.push.example;
+package com.baidu.push.example.ui;
 
 import android.app.Activity;
 import android.content.res.Resources;

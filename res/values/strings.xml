@@ -22,5 +22,7 @@
     <string name="initializeAppUrl">http://192.168.10.123:8080/QASMSOH-1.0-SNAPSHOT/app/</string>
     <string name="updateDeviceInformationTaskUrl">http://192.168.10.123:8080/QASMSOH-1.0-SNAPSHOT/terminal/</string>
     <string name="systemBindUrl">http://192.168.10.123:8080/QASMSOH-1.0-SNAPSHOT/terminal/bindAppTerminal</string>
-
+    <!--检测服务器状态时间配置 -->
+    <string name="initialDelay">10</string>
+    <string name="delay">90</string>
 </resources>

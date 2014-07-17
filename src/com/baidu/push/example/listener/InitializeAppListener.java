@@ -3,6 +3,7 @@ package com.baidu.push.example.listener;
 import android.content.Context;
 import com.baidu.push.example.event.InitializeAppEvent;
 import com.baidu.push.example.event.NetworkStateEvent;
+import com.baidu.push.example.event.ServerStatusEvent;
 import com.baidu.push.example.event.UserLoginEvent;
 import com.baidu.push.example.task.InitializeAppTask;
 import de.greenrobot.event.EventBus;
@@ -33,9 +34,9 @@ public class InitializeAppListener {
     /**
      * 系统当前无网络，监听NetworkStateEvent，在有网络的情况执行获取最新系统参数任务。
      */
-    public void onEventBackgroundThread(NetworkStateEvent event) {
-        Ln.d("NetworkListener onEventBackgroundThread Network Type:  %s, subtype: %s, available: %s", event.getmTypeName(), event.getmSubtypeName(), event.ismAvailable());
-        if (this.initialize == false) {
+    public void onEventBackgroundThread(ServerStatusEvent event) {
+        Ln.d("InitializeAppListener onEventBackgroundThread ServerStatusEvent  ServerStatus:  %s", event.getStatus());
+        if (this.initialize.equals(Boolean.FALSE) && event.getStatus()) {
             InitializeAppTask initializeAppTask = new InitializeAppTask(this.applicationContext);
             initializeAppTask.execute();
         }

@@ -1,4 +1,4 @@
-package com.baidu.push.example;
+package com.baidu.push.example.ui;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
+import com.baidu.push.example.utils.Utils;
 
 /**
  * 登录百度账号初始化Channel的Activity
