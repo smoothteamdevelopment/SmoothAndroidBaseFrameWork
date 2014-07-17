@@ -2,14 +2,11 @@ package com.baidu.push.example.task;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import com.baidu.push.example.R;
 import com.baidu.push.example.bean.App;
 import com.baidu.push.example.event.InitializeAppEvent;
 import com.baidu.push.example.repository.HttpMessageConverterConfig;
-import com.baidu.push.example.repository.impl.Jackson2HttpMessageConverterConfig;
 import com.google.inject.Inject;
-//import de.greenrobot.event.EventBus;
 import com.google.inject.name.Named;
 import de.greenrobot.event.EventBus;
 import org.springframework.web.client.RestTemplate;
